@@ -1,1 +1,150 @@
-Hello World!
+<!DOCTYPE html>
+<html lang="pt_br">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <title>PoC GitHub Pages + HighCharts + GDrive Spreadsheet as DB</title>
+
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/data.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    </head>
+            <figure class="highcharts-figure highcharts-figure-small">
+                <div id="vaccine-date-count-chart"></div>
+            </figure>
+
+            <figure class="highcharts-figure highcharts-figure-small">
+                <div id="vaccination-site-count-chart"></div>
+            </figure>
+
+            <figure class="highcharts-figure highcharts-figure-small">
+                <div id="area-count-chart"></div>
+            </figure>
+        </div>
+    </body>
+
+    <script>
+
+        const googleAPIKey = 'AIzaSyAV996_h51XNMulCPZWuIzliZmFyR2WJDI';
+        const googleSpreadsheetKey = '1EVBfLtTWaMIkbY00qTg_f-iAFdPrgoGE-tER2JHYNrE';
+
+        function vaccineDateCount () {
+          Highcharts.chart('vaccine-date-count-chart', {
+            chart: {
+              type: 'column'
+
+            },
+            title: {
+              text: 'Vacinas aplicadas por data de vacinação'
+            },
+            xAxis: {
+              type: 'category'
+            },
+            yAxis: {
+              title: {
+                text: 'Número de vacinas aplicadas'
+              }
+
+            },
+            plotOptions: {
+              series: {
+                borderWidth: 0,
+                dataLabels: {
+                  enabled: true,
+                  format: '{point.y}'
+                }
+              }
+            },
+            accessibility: {
+              announceNewData: {
+                enabled: true,
+                minAnnounceInterval: 15000,
+                announcementFormatter: function (allSeries, newSeries, newPoint) {
+                  if (newPoint) {
+                    return 'New point added. Value: ' + newPoint.y
+                  }
+                  return false
+                }
+              }
+            },
+            data: {
+              googleAPIKey: googleAPIKey,
+              googleSpreadsheetKey: googleSpreadsheetKey,
+              googleSpreadsheetRange: "'Vacinas aplicadas por data'!A1:B100000000",
+              enablePolling: true,
+              dataRefreshRate: 10,
+              dateFormat: 'dd/mm/YYYY'
+            }
+          })
+        }
+
+        function vaccinationSiteCount () {
+          Highcharts.chart('vaccination-site-count-chart', {
+            chart: {
+              type: 'bar'
+            },
+            title: {
+              text: 'Vacinas aplicadas por local de vacinação'
+            },
+            accessibility: {
+              announceNewData: {
+                enabled: true,
+                minAnnounceInterval: 15000,
+                announcementFormatter: function (allSeries, newSeries, newPoint) {
+                  if (newPoint) {
+                    return 'New point added. Value: ' + newPoint.y
+                  }
+                  return false
+                }
+              }
+            },
+            data: {
+              googleAPIKey: googleAPIKey,
+              googleSpreadsheetKey: googleSpreadsheetKey,
+              googleSpreadsheetRange: "'Vacinas aplicadas por local'!A1:B100000000",
+              enablePolling: true,
+              dataRefreshRate: 10
+            }
+          })
+        }
+
+        function areaCountChart () {
+          Highcharts.chart('area-count-chart', {
+            chart: {
+              type: 'bar'
+            },
+            title: {
+              text: 'Vacinas aplicadas por zona (área) de Manaus'
+            },
+            accessibility: {
+              announceNewData: {
+                enabled: true,
+                minAnnounceInterval: 15000,
+                announcementFormatter: function (allSeries, newSeries, newPoint) {
+                  if (newPoint) {
+                    return 'New point added. Value: ' + newPoint.y
+                  }
+                  return false
+                }
+              }
+            },
+            data: {
+              googleAPIKey: googleAPIKey,
+              googleSpreadsheetKey: googleSpreadsheetKey,
+              googleSpreadsheetRange: "'Vacinas aplicadas por zona (área)'!A1:B100000000",
+              enablePolling: true,
+              dataRefreshRate: 10
+            }
+          })
+        }
+
+    // Create charts
+    vaccineDateCount()
+    vaccinationSiteCount()
+    areaCountChart()
+
+    </script>
+</html>
